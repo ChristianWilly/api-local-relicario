@@ -1,0 +1,10 @@
+{
+  "name": "api-local-relicario",
+  "version": "1.0.0",
+  "description": "api para testes locais",
+  "main": "app.js",
+  "repository": "https://github.com/ChristianWilly/api-local-relicario.git",
+  "author": "WillyChristian <crisort@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
