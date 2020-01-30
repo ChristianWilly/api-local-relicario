@@ -48,11 +48,11 @@ router.post("/login-auth", async (req, res)=>{
 	const { email , senha } = req.body
 
 	const user = await userModel.findOne({ email }).select("+senha");
-
-	if(!user) return res.status(400).send({ error: 'Usuário ou senha incorreto(s).' })
-	if(senha !== user.senha){ res.status(401).send({error: "Senha inválida"})}
 	
-	user.senha = undefined
+	if(!user) return res.status(400).send('Usuário ou senha incorreto(s) ou não existem.' )
+	if(senha !== user.senha) return res.status(401).send("Usuário ou senha incorreto(s) ou não existem.")
+	
+	 user.senha = undefined
 	res.status(200).send(user) 
 })
 
