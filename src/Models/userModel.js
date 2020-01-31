@@ -5,20 +5,36 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		require: true
 	},
+	sname: {
+		type: String,
+		require: true
+	},
 	email: {
 		type: String,
 		require: true,
 		unique: true
 	},
-	accessType: {
-		type: String,
-		require: true
-	},	
 	senha: {
 		type: String,
 		require: true,
 		select: false
+	},	
+	cep: {
+		type: String,
+	},	
+	rua: {
+		type: String,
+	},	
+	cidade: {
+		type: String,
 	},
+	estado: {
+		type: String,
+	},
+	accessType: {
+		type: String,
+		// require: true
+	},	
 	createdAt: {
 		type: Date,
 		default: Date.now
