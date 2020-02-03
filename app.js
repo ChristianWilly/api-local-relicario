@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const session = require('express-session')
 require('dotenv/config')
 
 // IMPORT DE ARQUIVOS INTERNOS
@@ -17,6 +18,12 @@ mongoose.connect( process.env.URL, {
 //CONFIGURAÇÕES GERAIS 
 const app = express()
 
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}))
+app.use(bodyParser.urlencoded({ extended: true}))
 app.use( bodyParser.json())
 app.use(cors({
 	Origin: "*"

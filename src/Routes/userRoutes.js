@@ -7,7 +7,7 @@ const userModel = require('../Models/userModel.js')
 
 router.get("/", (req, res) => {
 	userModel.find()
-		.then(response =>{
+		.then(response =>{			
 			res.json(response)
 		})
 	})
@@ -52,8 +52,11 @@ router.post("/login-auth", async (req, res)=>{
 	if(!user) return res.status(400).send('Usuário ou senha incorreto(s) ou não existem.' )
 	if(senha !== user.senha) return res.status(401).send("Usuário ou senha incorreto(s) ou não existem.")
 	
-	 user.senha = undefined
-	res.status(200).send(user) 
+ 	user.senha = undefined
+ 	let username = user.name
+	req.session.loggedin = true;
+	req.session.username = username;
+	res.redirect(301,'http://localhost:3000/home');
 })
 
 module.exports = router
