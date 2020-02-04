@@ -1,31 +1,22 @@
 const express = require('express')
 const router = express.Router()
+const jwt = require('jsonwebtoken')
 
+
+// JWT Hash
+const config = require('../Configuration/config.json')
 
 // IMPORT DE ARQUIVOS
 const userModel = require('../Models/userModel.js')
 
-router.get("/", (req, res) => {
-	userModel.find()
-		.then(response =>{			
-			res.json(response)
-		})
-	})
+// GERADOR DE TOKEN
+function geraToken(params){
+	return jwt.sign(params, config.key, {expiresIn: 2000})
+}
 
-//     PESQUISA / BUSCA
-router.get("/search=:termo", async (req, res) => {
-	let pesquisa = req.params.termo
-	let retorno
-	userModel.find()
-	.then( response => {
-		response.map( e => { 
-				if(Object.values(e) === pesquisa){
-					retorno = e
-				}
-			})
-		
-	}).then( () => res.json(retorno))
-})
+
+
+
 
 //    CADASTRAMENTO
 router.post("/register", async (req, res) =>{
@@ -37,26 +28,25 @@ router.post("/register", async (req, res) =>{
 		}
 		const user = await userModel.create(req.body)
 		user.senha = undefined
-		return res.send({user})
+		res.json({user, token: geraToken({id: user.id})})
 	}catch(err){
 			res.status(400).send({error : "Falha no cadastramento. Contate o administrador do sistema"})
 	}
 })
 
-//   AUTENTICAÇÃO
-router.post("/login-auth", async (req, res)=>{
-	const { email , senha } = req.body
 
+
+
+//   AUTENTICAÇÃO DE LOGIN
+router.post("/auth", async (req, res)=>{
+	const { email , senha } = req.body
 	const user = await userModel.findOne({ email }).select("+senha");
 	
 	if(!user) return res.status(400).send('Usuário ou senha incorreto(s) ou não existem.' )
 	if(senha !== user.senha) return res.status(401).send("Usuário ou senha incorreto(s) ou não existem.")
 	
  	user.senha = undefined
- 	let username = user.name
-	req.session.loggedin = true;
-	req.session.username = username;
-	res.redirect(301,'http://localhost:3000/home');
+	res.json({user, token: geraToken({id: user.id})})
 })
 
 module.exports = router
